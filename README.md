@@ -2,6 +2,12 @@
 
 # Instatic
 
+**Register App Launcher**
+```sh
+cd instatic
+./instatic.desktop --register-app
+```
+
 **Own your site. Love building it.**
 
 A self-hosted CMS where the visual editor, content engine, and publisher all live in one Bun server — and the pages it ships are clean enough to read in view-source.

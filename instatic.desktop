@@ -1,0 +1,18 @@
+#!/usr/bin/env /home/n01d/Projects/apps/instatic/instatic-execdesktop
+#
+# Instatic self-modifying desktop file
+# Run './instatic.desktop --register-app' to install to application menu
+# Run './instatic.desktop' to launch Instatic
+
+[Desktop Entry]
+Type=Application
+Name=Instatic CMS
+GenericName=Visual CMS
+Comment=Self-hosted visual CMS with integrated editor
+Exec=/home/n01d/Projects/apps/instatic/instatic-launcher.sh
+Icon=/home/n01d/Projects/apps/instatic/public/icon512.png
+Terminal=true
+Categories=Development;WebDevelopment;
+StartupNotify=true
+StartupWMClass=Instatic
+X-Instatic-ExecShell=./instatic-launcher.sh

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Extracts and runs X-Instatic-ExecShell from the .desktop file
+
+DESKTOP_FILE="$1"
+shift
+
+EXEC_SHELL=$(grep '^X-Instatic-ExecShell' "$DESKTOP_FILE" | tail -1 | sed 's/^X-Instatic-ExecShell=//')
+
+if [ "$#" -ge 1 ] && [ "$1" = "--register-app" ]; then
+    # Self-register like Tor Browser
+    desktop-file-install --dir="$HOME/.local/share/applications" "$DESKTOP_FILE"
+    update-desktop-database "$HOME/.local/share/applications"
+    echo "Instatic registered to application menu"
+    exit 0
+fi
+
+echo "Launching '$EXEC_SHELL'..."
+cd "$(dirname "$DESKTOP_FILE")"
+exec $EXEC_SHELL "$@"
