@@ -168,7 +168,7 @@ What comes out the other end is plain HTML and compact CSS, all the way down. No
 You need [Bun](https://bun.sh) 1.4.1 or newer (`bun upgrade` if yours is older; `bun run dev` refuses an older one because its Vite proxy needs that release to forward the editor's WebSocket). Nothing else. The default dev setup runs on SQLite, so there are no extra services to stand up.
 
 ```sh
-git clone https://github.com/corebunch/instatic.git
+git clone https://github.com/hiep-ngo/instatic.git
 cd instatic
 bun install
 bun run dev
