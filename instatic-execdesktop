@@ -1,19 +1,38 @@
 #!/usr/bin/env bash
 # Extracts and runs X-Instatic-ExecShell from the .desktop file
+# Supports relocatable paths like Tor Browser
 
 DESKTOP_FILE="$1"
 shift
 
+# Get absolute path of desktop file's directory
+DESKTOP_DIR="$(cd "$(dirname "$DESKTOP_FILE")" && pwd)"
+DESKTOP_BASENAME="$(basename "$DESKTOP_FILE")"
+
+# Extract the exec shell command from the desktop file
 EXEC_SHELL=$(grep '^X-Instatic-ExecShell' "$DESKTOP_FILE" | tail -1 | sed 's/^X-Instatic-ExecShell=//')
 
+# Handle --register-app
 if [ "$#" -ge 1 ] && [ "$1" = "--register-app" ]; then
-    # Self-register like Tor Browser
-    desktop-file-install --dir="$HOME/.local/share/applications" "$DESKTOP_FILE"
-    update-desktop-database "$HOME/.local/share/applications"
-    echo "Instatic registered to application menu"
+    # Create a copy with absolute paths for the application menu
+    TARGET_DIR="$HOME/.local/share/applications"
+    mkdir -p "$TARGET_DIR"
+    
+    # Replace relative paths with absolute paths in the copy
+    sed \
+        -e "s|Exec=sh -c '\"\$(dirname \"\$\*\")\"/instatic-launcher.sh' dummy %k|Exec=$DESKTOP_DIR/instatic-launcher.sh|" \
+        -e "s|Icon=\$(dirname \"\$\*\")/public/icon512.png|Icon=$DESKTOP_DIR/public/icon512.png|" \
+        -e "s|X-Instatic-ExecShell=./instatic-launcher.sh|X-Instatic-ExecShell=$DESKTOP_DIR/instatic-launcher.sh|" \
+        -e "s|^#!/usr/bin/env ./instatic-execdesktop|#!/usr/bin/env $DESKTOP_DIR/instatic-execdesktop|" \
+        "$DESKTOP_FILE" > "$TARGET_DIR/$DESKTOP_BASENAME"
+    
+    chmod +x "$TARGET_DIR/$DESKTOP_BASENAME"
+    update-desktop-database "$TARGET_DIR"
+    echo "Instatic registered to application menu (paths updated to: $DESKTOP_DIR)"
     exit 0
 fi
 
-echo "Launching '$EXEC_SHELL'..."
-cd "$(dirname "$DESKTOP_FILE")"
+# Run the command from the desktop file's directory
+echo "Launching Instatic from $DESKTOP_DIR..."
+cd "$DESKTOP_DIR"
 exec $EXEC_SHELL "$@"

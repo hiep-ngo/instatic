@@ -1,16 +1,28 @@
-#!/usr/bin/env /home/n01d/Projects/apps/instatic/instatic-execdesktop
+#!/usr/bin/env ./instatic-execdesktop
 #
 # Instatic self-modifying desktop file
 # Run './instatic.desktop --register-app' to install to application menu
 # Run './instatic.desktop' to launch Instatic
+#
+# When invoked from the shell, this file must be in the Instatic project root
+# directory. When run from the file manager or desktop GUI, it is relocatable.
+#
+# After first invocation with --register-app, it will update itself with the
+# absolute path to the current Instatic location, to support relocation of this
+# .desktop file for GUI invocation.
+#
+# If you use --register-app, and then relocate your Instatic directory, Instatic
+# will no longer launch from your desktop's app launcher/dock. However, if you
+# re-run --register-app from inside that new directory, the script will correct
+# the absolute paths and re-register itself.
 
 [Desktop Entry]
 Type=Application
-Name=Instatic CMS
-GenericName=Visual CMS
-Comment=Self-hosted visual CMS with integrated editor
-Exec=/home/n01d/Projects/apps/instatic/instatic-launcher.sh
-Icon=/home/n01d/Projects/apps/instatic/public/icon512.png
+Name=Instatic
+GenericName=Agentic self-hosted visual CMS
+Comment=A self-hosted CMS where the visual editor, content engine, and publisher all live in one Bun server
+Exec=sh -c '"$(dirname "$*")"/instatic-launcher.sh' dummy %k
+Icon=$(dirname "$*")/public/icon512.png
 Terminal=true
 Categories=Development;WebDevelopment;
 StartupNotify=true
